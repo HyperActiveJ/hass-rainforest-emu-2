@@ -14,9 +14,9 @@ from homeassistant.const import (
     ATTR_MODEL,
     ATTR_HW_VERSION,
     ATTR_SW_VERSION,
-    ENERGY_KILO_WATT_HOUR,
-    POWER_KILO_WATT,
-    CURRENCY_DOLLAR,
+    EntityCategory,
+    UnitOfEnergy,
+    UnitOfPower,
 )
 
 from .const import DOMAIN, DEVICE_NAME
@@ -86,10 +86,6 @@ class Emu2GenericSensor(SensorEntityBase):
         self._command = command
         if command is not None:
             self.should_poll = True
-        
-        #self._attr_device_class = SensorDeviceClass.POWER
-        #self._attr_state_class = SensorStateClass.MEASUREMENT
-        #self._attr_native_unit_of_measurement = POWER_KILO_WATT
 
     async def async_update(self):
         await self._device._emu2.issue_command(self._command)
@@ -113,9 +109,9 @@ class Emu2ActivePowerSensor(SensorEntityBase):
         self._attr_unique_id = f"{self._device.device_id}_power"
         self._attr_name = f"{self._device.device_name} Power"
 
-        self._attr_device_class = SensorDeviceClass.POWER
-        self._attr_state_class = SensorStateClass.MEASUREMENT
-        self._attr_native_unit_of_measurement = POWER_KILO_WATT
+        native_unit_of_measurement=UnitOfPower.KILO_WATT,
+        device_class=SensorDeviceClass.POWER,
+        state_class=SensorStateClass.MEASUREMENT,
 
     @property
     def state(self):
@@ -131,9 +127,9 @@ class Emu2CurrentPriceSensor(SensorEntityBase):
 
         self._attr_device_class = SensorDeviceClass.MONETARY
         self._attr_state_class = SensorStateClass.MEASUREMENT
-        self._attr_native_unit_of_measurement = (
-            f"{CURRENCY_DOLLAR}/{ENERGY_KILO_WATT_HOUR}"
-        )
+        #self._attr_native_unit_of_measurement = (
+        #   f"{CURRENCY_DOLLAR}/{UnitOfEnergy.KILO_WATT_HOUR}"
+        #)
 
     async def async_update(self):
         await self._device._emu2.get_current_price()
@@ -150,9 +146,9 @@ class Emu2CurrentPeriodUsageSensor(SensorEntityBase):
         self._attr_unique_id = f"{self._device.device_id}_current_period_usage"
         self._attr_name = f"{self._device.device_name} Current Period Usage"
 
-        self._attr_device_class = SensorDeviceClass.ENERGY
-        self._attr_state_class = SensorStateClass.TOTAL
-        self._attr_native_unit_of_measurement = ENERGY_KILO_WATT_HOUR
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
 
     async def async_update(self):
         await self._device._emu2.get_current_period_usage()
@@ -175,9 +171,9 @@ class Emu2SummationDeliveredSensor(SensorEntityBase):
         self._attr_unique_id = f"{self._device.device_id}_summation_delivered"
         self._attr_name = f"{self._device.device_name} Summation Delivered"
 
-        self._attr_device_class = SensorDeviceClass.ENERGY
-        self._attr_state_class = SensorStateClass.TOTAL_INCREASING
-        self._attr_native_unit_of_measurement = ENERGY_KILO_WATT_HOUR
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
 
     @property
     def state(self):
@@ -194,9 +190,9 @@ class Emu2SummationReceivedSensor(SensorEntityBase):
         self._attr_unique_id = f"{self._device.device_id}_summation_received"
         self._attr_name = f"{self._device.device_name} Summation Received"
 
-        self._attr_device_class = SensorDeviceClass.ENERGY
-        self._attr_state_class = SensorStateClass.TOTAL_INCREASING
-        self._attr_native_unit_of_measurement = ENERGY_KILO_WATT_HOUR
+        native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
+        device_class=SensorDeviceClass.ENERGY,
+        state_class=SensorStateClass.TOTAL_INCREASING,
 
     @property
     def state(self):
